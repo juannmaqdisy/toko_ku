@@ -34,7 +34,7 @@ if (!function_exists('format_date_id')) {
         return $hari[date('w', $timestamp)] . ', ' .
                date('j', $timestamp) . ' ' .
                $bulan[date('n', $timestamp) - 1] . ' ' .
-               date('Y', timestamp);
+               date('Y', $timestamp);
     }
 }
 
