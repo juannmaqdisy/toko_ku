@@ -58,10 +58,6 @@ class Kategori extends Admin_Controller {
         $this->load->view('layouts/utama', $this->data);
     }
     
-    public function index() {
-        $this->kategori_index();
-    }
-    
     /**
      * ============================================================
      * FUNCTION: kategori_tambah()
