@@ -31,39 +31,40 @@ class Kategori extends Admin_Controller {
         $this->load->helper('url');
     }
 
+    
     /**
      * ============================================================
      * FUNCTION: kategori_index()
      * ============================================================
      * Halaman daftar semua kategori
      * URL: /kategori
-     *
-     * Fungsi ini:
-     * 1. Mengambil semua data kategori dari database
-     * 2. Menampilkan data ke tabel dengan DataTables
-     */
+    *
+    * Fungsi ini:
+    * 1. Mengambil semua data kategori dari database
+    * 2. Menampilkan data ke tabel dengan DataTables
+    */
     public function kategori_index()
     {
         // Set judul halaman
         $this->data['judul_halaman'] = 'Daftar Kategori Produk';
-
+        
         // Ambil semua data kategori dari model
         $this->data['kategori'] = $this->Kategori_model->ambil_semua();
-
+        
         // Set view yang akan ditampilkan
         $this->data['view_konten'] = 'kategori/index';
-
+        
         // Load layout utama dengan data di atas
         $this->load->view('layouts/utama', $this->data);
     }
-
+    
     /**
      * ============================================================
      * FUNCTION: kategori_tambah()
      * ============================================================
      * Halaman form tambah kategori baru
      * URL: /kategori/tambah
-     *
+    *
      * Fungsi ini:
      * 1. Menampilkan form input kategori
      * 2. Memproses data saat form disubmit
