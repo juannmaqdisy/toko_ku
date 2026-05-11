@@ -266,7 +266,7 @@ class Kategori extends Admin_Controller {
         {
             // Jika nama sudah ada
             $this->form_validation->set_message('cek_nama_kategori',
-                '{field} sudah digunakan oleh kategori lain!');
+             '{field} sudah digunakan oleh kategori lain!');
 
             return FALSE;
         }
