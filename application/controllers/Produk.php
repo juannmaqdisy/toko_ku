@@ -44,7 +44,7 @@ class Produk extends Admin_Controller {
         $this->data['produk'] = $this->Produk_model->ambil_semua();
         $this->data['view_konten'] = 'produk/index';
 
-        $this->load->view('layouts/utama', $this->data);
+        $this->load->view('layouts/main', $this->data);
     }
 
     /**
@@ -109,7 +109,7 @@ class Produk extends Admin_Controller {
 
             if ($id_produk)
             {
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Produk <b>' . $data_produk['name'] . '</b> berhasil ditambahkan! ' .
                     'Silakan tambahkan stok melalui menu Stok Masuk.');
 
@@ -208,7 +208,7 @@ class Produk extends Admin_Controller {
             // Update data
             if ($this->Produk_model->update($id, $data_produk))
             {
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Produk <b>' . $data_produk['name'] . '</b> berhasil diupdate!');
 
                 redirect('produk', 'refresh');
@@ -235,7 +235,7 @@ class Produk extends Admin_Controller {
     {
         if ($this->Produk_model->hapus($id))
         {
-            $this->session->set_flashdata('sukses', 'Produk berhasil dihapus!');
+            $this->session->set_flashdata('success', 'Berhasil Dihapus.'); 
         }
         else
         {

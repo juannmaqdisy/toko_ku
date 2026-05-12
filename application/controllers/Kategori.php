@@ -54,7 +54,7 @@ class Kategori extends Admin_Controller {
         $this->data['view_konten'] = 'kategori/index';
 
         // Load layout utama dengan data di atas
-        $this->load->view('layouts/utama', $this->data);
+        $this->load->view('layouts/main', $this->data);
     }
 
     /**
@@ -110,7 +110,7 @@ class Kategori extends Admin_Controller {
             if ($id_kategori)
             {
                 // Set pesan sukses menggunakan flashdata
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Kategori <b>' . $data_kategori['name'] . '</b> berhasil ditambahkan!');
 
                 // Redirect ke halaman daftar kategori
@@ -193,7 +193,7 @@ class Kategori extends Admin_Controller {
             // Cek apakah update berhasil
             if ($hasil)
             {
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Kategori <b>' . $data_kategori['name'] . '</b> berhasil diupdate!');
 
                 redirect('kategori', 'refresh');
@@ -236,7 +236,7 @@ class Kategori extends Admin_Controller {
         if ($hasil['status'] === TRUE)
         {
             // Jika berhasil
-            $this->session->set_flashdata('sukses', $hasil['message']);
+            $this->session->set_flashdata('success', $hasil['message']);
         }
         else
         {
