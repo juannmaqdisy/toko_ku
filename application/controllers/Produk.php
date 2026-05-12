@@ -84,8 +84,8 @@ class Produk extends Admin_Controller {
             if ($nama_gambar === FALSE)
             {
                 // Upload gagal, tampilkan form lagi
-                $this->data['view_konten'] = 'produk/tambah';
-                $this->load->view('layouts/utama', $this->data);
+                 $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+                 $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
                 return;
             }
 
@@ -121,8 +121,8 @@ class Produk extends Admin_Controller {
             }
         }
 
-        $this->data['view_konten'] = 'produk/tambah';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
     /**
@@ -174,8 +174,8 @@ class Produk extends Admin_Controller {
                 {
                     // Upload gagal
                     $this->data['produk'] = $produk;
-                    $this->data['view_konten'] = 'produk/edit';
-                    $this->load->view('layouts/utama', $this->data);
+                    $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+                    $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
                     return;
                 }
 
@@ -220,8 +220,8 @@ class Produk extends Admin_Controller {
         }
 
         $this->data['produk'] = $produk;
-        $this->data['view_konten'] = 'produk/edit';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
     /**

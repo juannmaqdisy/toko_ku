@@ -125,8 +125,8 @@ class Kategori extends Admin_Controller {
         }
 
         // Jika form belum disubmit atau validasi gagal, tampilkan form
-        $this->data['view_konten'] = 'kategori/tambah';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
     /**
@@ -209,8 +209,8 @@ class Kategori extends Admin_Controller {
         $this->data['kategori'] = $kategori;
 
         // Tampilkan form edit
-        $this->data['view_konten'] = 'kategori/edit';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
     /**
