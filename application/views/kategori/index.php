@@ -90,17 +90,18 @@
                             <!-- Tombol aksi -->
                             <td>
                                 <!-- Tombol Edit -->
-                                <a href="<?= base_url('kategori/kategori_edit/' . $kat->id) ?>"
+                                <a href="<?= base_url('kategori/edit/' . $kat->id) ?>"
+                                
                                    class="btn btn-warning btn-sm"
                                    title="Edit Kategori">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit">Edit</i>
                                 </a>
 
                                 <!-- Tombol Hapus dengan konfirmasi SweetAlert -->
                                 <button onclick="hapus_kategori(<?= $kat->id ?>, '<?= htmlspecialchars($kat->name) ?>')"
                                         class="btn btn-danger btn-sm"
                                         title="Hapus Kategori">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash">Hapus</i>
                                 </button>
                             </td>
                         </tr>
@@ -113,7 +114,7 @@
                             <td colspan="5" class="text-center text-muted">
                                 <i class="fas fa-folder-open"></i>
                                 Belum ada data kategori.
-                                <a href="<?= base_url('kategori/kategori_tambah') ?>">Tambah kategori baru?</a>
+                                <a href="<?= base_url('kategori/tambah') ?>">Tambah kategori baru?</a>
                             </td>
                         </tr>
                     <?php endif; ?>
