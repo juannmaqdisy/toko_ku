@@ -110,7 +110,7 @@ class Kategori extends CI_Controller {
             if ($id_kategori)
             {
                 // Set pesan sukses menggunakan flashdata
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Kategori <b>' . $data_kategori['name'] . '</b> berhasil ditambahkan!');
 
                 // Redirect ke halaman daftar kategori
@@ -193,7 +193,7 @@ class Kategori extends CI_Controller {
             // Cek apakah update berhasil
             if ($hasil)
             {
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Kategori <b>' . $data_kategori['name'] . '</b> berhasil diupdate!');
 
                 redirect('kategori', 'refresh');
@@ -236,7 +236,7 @@ class Kategori extends CI_Controller {
         if ($hasil['status'] === TRUE)
         {
             // Jika berhasil
-            $this->session->set_flashdata('sukses', $hasil['message']);
+            $this->session->set_flashdata('success', $hasil['message']);
         }
         else
         {
