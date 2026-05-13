@@ -1,16 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access reserved');
 
+
 /**
- * Format angka ke format mata uang Rupiah
- *
- * @param float $amount
- * @return string
+ * Format angka menjadi format Rupiah
+ * Contoh: format_rupiah(15000) → "Rp 15.000"
  */
 if (!function_exists('format_rupiah')) {
-    function format_rupiah($amount)
+    function format_rupiah($angka)
     {
-        return 'Rp ' . number_format($amount, 0, ',', '.');
+        return 'Rp ' . number_format($angka, 0, ',', '.');
     }
 }
 

@@ -27,6 +27,7 @@ class Auth extends CI_Controller {
         // Validasi form
         $this->form_validation->set_rules('identity', 'Identity', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->load->library('form_validation');
 
         if ($this->form_validation->run() === TRUE) {
             // Cek login

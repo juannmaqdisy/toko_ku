@@ -18,7 +18,7 @@
     <div class="card-body">
         <!-- Info stok menipis -->
         <?php
-        $stok_menipis = $this->Produk_model->ambil_stok_menipis(10);
+        $this->data['stok_menipis'] = $this->Produk_model->ambil_stok_menipis(10);
         if (!empty($stok_menipis)):
         ?>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">

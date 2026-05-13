@@ -88,7 +88,7 @@ class Produk extends Admin_Controller {
                  $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
                 return;
             }
-
+    
             // Siapkan data produk
             // CATATAN: Stok awal SELALU 0, akan diisi lewat Stok Masuk
             $data_produk = array(
