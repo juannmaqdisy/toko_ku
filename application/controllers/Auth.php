@@ -7,6 +7,7 @@ class Auth extends CI_Controller {
     {
         parent::__construct();
         $this->load->library('ion_auth');
+        $this->load->library('form_validation'); // ← tambah ini
         $this->load->library('session');
         $this->load->helper('url');
     }
@@ -53,7 +54,7 @@ class Auth extends CI_Controller {
             $this->load->view('layouts/auth_footer');
         }
     }
-
+    
     /**
      * Alias untuk index()
      */
