@@ -32,7 +32,7 @@
     <!-- Nav Item - Kategori -->
     
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('category') ?>">
+        <a class="nav-link" href="<?= base_url('kategori') ?>">
             <i class="fas fa-fw fa-folder"></i>
             <span>Kategori</span>
         </a>
