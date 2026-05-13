@@ -38,11 +38,11 @@ class Produk extends CI_Controller {
      * Halaman daftar semua produk
      * URL: /produk
      */
-    public function produk_index()
+    public function index()
     {
         $this->data['judul_halaman'] = 'Daftar Produk';
         $this->data['produk'] = $this->Produk_model->ambil_semua();
-        $this->data['view_konten'] = 'produk/index';
+        $this->data['content_view'] = 'produk/index';
 
         $this->load->view('layouts/main', $this->data);
     }
@@ -57,10 +57,10 @@ class Produk extends CI_Controller {
      * CATATAN: Stok awal produk = 0
      * Stok akan ditambah melalui modul Stok Masuk
      */
-    public function produk_tambah()
+    public function tambah()
     {
         $this->data['judul_halaman'] = 'Tambah Produk Baru';
-        $this->data['kategori'] = $this->Kategori_model->ambil_semua();
+        $this->data['produk'] = $this->Produk_model->ambil_semua();
 
         // Aturan validasi form
         $this->form_validation->set_rules('category_id', 'Kategori', 'required');
@@ -84,7 +84,7 @@ class Produk extends CI_Controller {
             if ($nama_gambar === FALSE)
             {
                 // Upload gagal, tampilkan form lagi
-                 $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+                 $this->data['content_view'] = 'produk/tambah';  // ✅ key benar
                  $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
                 return;
             }
@@ -121,7 +121,7 @@ class Produk extends CI_Controller {
             }
         }
 
-        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->data['content_view'] = 'produk/tambah';  // ✅ key benar
         $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
@@ -132,10 +132,10 @@ class Produk extends CI_Controller {
      * Halaman form edit produk
      * URL: /produk/edit/{id}
      */
-    public function produk_edit($id = NULL)
+    public function edit($id = NULL)
     {
         $this->data['judul_halaman'] = 'Edit Produk';
-        $this->data['kategori'] = $this->Kategori_model->ambil_semua();
+        $this->data['produk'] = $this->Produk_model->ambil_semua();
 
         // Ambil data produk yang akan diedit
         $produk = $this->Produk_model->ambil_berdasarkan_id($id);
@@ -174,7 +174,7 @@ class Produk extends CI_Controller {
                 {
                     // Upload gagal
                     $this->data['produk'] = $produk;
-                    $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+                    $this->data['content_view'] = 'produk/edit';  // ✅ key benar
                     $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
                     return;
                 }
@@ -220,7 +220,7 @@ class Produk extends CI_Controller {
         }
 
         $this->data['produk'] = $produk;
-        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
+        $this->data['content_view'] = 'produk/edit';  // ✅ key benar
         $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
     }
 
@@ -231,7 +231,7 @@ class Produk extends CI_Controller {
      * Hapus produk
      * URL: /produk/hapus/{id}
      */
-    public function produk_hapus($id)
+    public function hapus($id)
     {
         if ($this->Produk_model->hapus($id))
         {

@@ -3,7 +3,7 @@
  * tambah.php - Form Tambah Produk
  */
 ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card shadow mb-4">
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- Form dengan enctype untuk upload file -->
-                <?= form_open_multipart('produk/produk_tambah', ['id' => 'formTambahProduk']) ?>
+                <?= form_open_multipart('produk/tambah', ['id' => 'formTambahProduk']) ?>
 
                     <div class="row">
                         <!-- Kolom Kiri -->
@@ -35,6 +35,9 @@
                                 <?= form_label('Kategori', 'category_id', ['class' => 'font-weight-bold']) ?>
                                 <select name="category_id" id="category_id" class="form-control" required>
                                     <option value="">-- Pilih Kategori --</option>
+                                    <option value="">-- Makanan --</option>
+                                    <option value="">-- Minuman --</option>
+                                    <option value="">-- Baju --</option>
                                     <?php foreach ($kategori as $k): ?>
                                     <option value="<?= $k->id ?>">
                                         <?= htmlspecialchars($k->name) ?>

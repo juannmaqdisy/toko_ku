@@ -3,14 +3,14 @@
  * index.php - Daftar Produk
  */
 ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">
             <i class="fas fa-box"></i> Daftar Produk
         </h6>
 
-        <a href="<?= base_url('produk/produk_tambah') ?>" class="btn btn-primary btn-sm">
+        <a href="<?= base_url('produk/tambah/') ?>" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Produk
         </a>
     </div>
@@ -97,7 +97,7 @@
                         </td>
 
                         <td class="text-center">
-                            <a href="<?= base_url('produk/produk_edit/' . $p->id) ?>"
+                            <a href="<?= base_url('produk/edit/' . $p->id) ?>"
                                class="btn btn-warning btn-sm" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -113,7 +113,7 @@
                         <td colspan="8" class="text-center text-muted">
                             <i class="fas fa-box-open fa-2x"></i><br>
                             Belum ada data produk.<br>
-                            <a href="<?= base_url('produk/produk_tambah') ?>">Tambah produk baru?</a>
+                            <a href="<?= base_url('produk/tambah/') ?>">Tambah produk baru?</a>
                         </td>
                     </tr>
                     <?php endif; ?>
@@ -147,7 +147,7 @@ function hapus_produk(id, nama) {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '<?= base_url('produk/produk_hapus/') ?>' + id;
+            window.location.href = '<?= base_url('produk/hapus/') ?>' + id;
         }
     });
 }
