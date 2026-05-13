@@ -11,7 +11,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Kategori extends Admin_Controller {
+class Kategori extends CI_Controller {
 
     /**
      * Constructor - dipanggil saat pertama kali controller di-load
