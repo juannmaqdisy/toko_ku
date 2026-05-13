@@ -51,7 +51,7 @@
                 <?php endif; ?>
 
                 <!-- Content Page -->
-                <?php $this->load->view($content_view, $data); ?>
+                <?php $this->load->view($content_view); ?>
 
             </div>
             <!-- /.container-fluid -->

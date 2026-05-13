@@ -30,7 +30,7 @@
     </div>
 
     <!-- Nav Item - Kategori -->
-    <?php if($this->ion_auth->in_group('admin')): ?>
+    
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('category') ?>">
             <i class="fas fa-fw fa-folder"></i>
@@ -61,7 +61,7 @@
             <span>User</span>
         </a>
     </li>
-    <?php endif; ?>
+    
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -91,7 +91,7 @@
     <hr class="sidebar-divider">
 
     <!-- Heading: Laporan -->
-    <?php if($this->ion_auth->in_group('admin')): ?>
+    
     <div class="sidebar-heading">
         Laporan
     </div>
@@ -111,7 +111,7 @@
             <span>Laba Rugi</span>
         </a>
     </li>
-    <?php endif; ?>
+    
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

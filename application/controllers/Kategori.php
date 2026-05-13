@@ -51,10 +51,10 @@ class Kategori extends CI_Controller {
         $this->data['kategori'] = $this->Kategori_model->ambil_semua();
 
         // Set view yang akan ditampilkan
-        $this->data['view_konten'] = 'kategori/index';
+        $this->data['content_view'] = 'kategori/index';
 
         // Load layout utama dengan data di atas
-        $this->load->view('layouts/utama', $this->data);
+        $this->load->view('layouts/main', $this->data);
     }
 
     /**
