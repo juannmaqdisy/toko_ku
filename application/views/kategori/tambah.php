@@ -7,7 +7,7 @@
 
 // Card container
 ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card shadow mb-4">

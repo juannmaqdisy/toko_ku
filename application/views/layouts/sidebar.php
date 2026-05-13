@@ -40,7 +40,7 @@
 
     <!-- Nav Item - Produk -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('product') ?>">
+        <a class="nav-link" href="<?= base_url('produk') ?>">
             <i class="fas fa-fw fa-box"></i>
             <span>Produk</span>
         </a>

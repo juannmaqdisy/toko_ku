@@ -21,7 +21,7 @@
         </h6>
 
         <!-- Tombol tambah kategori baru -->
-        <a href="<?= base_url('kategori/kategori_tambah') ?>" class="btn btn-primary btn-sm">
+        <a href="<?= base_url('kategori/tambah') ?>" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Kategori
         </a>
     </div>
