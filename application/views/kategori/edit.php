@@ -11,7 +11,7 @@ if (!isset($kategori)) {
     show_error('Data kategori tidak ditemukan!', 404);
 }
 ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card shadow mb-4">
@@ -34,7 +34,7 @@ if (!isset($kategori)) {
 
                 <!-- Buka form -->
                 <!-- Form akan di-submit ke fungsi yang sama (kategori_edit) dengan method POST -->
-                <?= form_open('kategori/kategori_edit/' . $kategori->id, ['id' => 'formEditKategori']) ?>
+                <?= form_open('kategori/edit/' . $kategori->id, ['id' => 'formEditKategori']) ?>
 
                     <!-- Field: Nama Kategori -->
                     <div class="form-group">

@@ -59,11 +59,6 @@ $route['translate_uri_dashes'] = FALSE;
 // $route['dashboard']          = 'dashboard/index';
 
 $route['kategori'] = 'kategori/index';
-
 $route['kategori/tambah'] = 'kategori/tambah';
-
-$route['kategori/edit/(:num)'] =
-    'kategori/edit/$1';
-
-$route['kategori/hapus/(:num)'] =
-    'kategori/hapus/$1';
+$route['kategori/edit/(:num)'] = 'kategori/edit/$1';
+$route['kategori/hapus/(:num)'] = 'kategori/hapus/$1';

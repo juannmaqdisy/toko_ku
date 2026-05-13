@@ -24,7 +24,7 @@
 
                 <!-- Buka form dengan helper form CodeIgniter -->
                 <!-- Form akan di-submit ke: kategori/kategori_simpan -->
-                <?= form_open('kategori/kategori_tambah', ['id' => 'formTambahKategori']) ?>
+                <?= form_open('kategori/tambah', ['id' => 'formTambahKategori']) ?>
 
                     <!-- Field: Nama Kategori -->
                     <div class="form-group">

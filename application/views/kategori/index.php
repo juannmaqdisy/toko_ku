@@ -168,7 +168,7 @@ function hapus_kategori(id, nama) {
         // Jika user mengkonfirmasi
         if (result.isConfirmed) {
             // Redirect ke fungsi hapus
-            window.location.href = '<?= base_url('kategori/kategori_hapus/') ?>' + id;
+            window.location.href = '<?= base_url('kategori/hapus/') ?>' + id;
         }
     });
 }
