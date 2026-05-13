@@ -11,7 +11,7 @@
 
 // Card container untuk tampilan yang rapi
 ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="card shadow mb-4">
 
     <!-- Card Header: Judul dan tombol tambah -->

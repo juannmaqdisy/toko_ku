@@ -1,69 +1,125 @@
-<div class="wrapper">
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-    <!-- Sidebar -->
+<div id="wrapper">
+
+    <!-- SIDEBAR -->
     <?php $this->load->view('layouts/sidebar'); ?>
 
-    <!-- Content Wrapper -->
+    <!-- CONTENT WRAPPER -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
+        <!-- MAIN CONTENT -->
         <div id="content">
 
-            <!-- Topbar -->
+            <!-- TOPBAR -->
             <?php $this->load->view('layouts/topnav'); ?>
 
-            <!-- Begin Page Content -->
+            <!-- PAGE CONTENT -->
             <div class="container-fluid">
 
-                <!-- Page Heading -->
+                <!-- PAGE TITLE -->
                 <?php if(isset($page_title)): ?>
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800"><?= $page_title ?></h1>
-                </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+                        <h1 class="h3 mb-0 text-gray-800">
+
+                            <?= htmlspecialchars($page_title) ?>
+
+                        </h1>
+
+                    </div>
+
                 <?php endif; ?>
 
-                <!-- Flash Messages -->
+                <!-- FLASH SUCCESS -->
                 <?php if($this->session->flashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= $this->session->flashdata('success') ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm">
+
+                        <i class="fas fa-check-circle mr-1"></i>
+
+                        <?= $this->session->flashdata('success') ?>
+
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert">
+
+                            <span>&times;</span>
+
+                        </button>
+
+                    </div>
+
                 <?php endif; ?>
 
+                <!-- FLASH ERROR -->
                 <?php if($this->session->flashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= $this->session->flashdata('error') ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+
+                        <i class="fas fa-times-circle mr-1"></i>
+
+                        <?= $this->session->flashdata('error') ?>
+
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert">
+
+                            <span>&times;</span>
+
+                        </button>
+
+                    </div>
+
                 <?php endif; ?>
 
+                <!-- FLASH WARNING -->
                 <?php if($this->session->flashdata('warning')): ?>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <?= $this->session->flashdata('warning') ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+
+                    <div class="alert alert-warning alert-dismissible fade show shadow-sm">
+
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+
+                        <?= $this->session->flashdata('warning') ?>
+
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert">
+
+                            <span>&times;</span>
+
+                        </button>
+
+                    </div>
+
                 <?php endif; ?>
 
-                <!-- Content Page -->
-                <?php $this->load->view($content_view); ?>
+                <!-- CONTENT -->
+                <?php
+                if(isset($content_view))
+                {
+                    $this->load->view($content_view);
+                }
+                else
+                {
+                    echo '<div class="alert alert-danger">
+                            View tidak ditemukan.
+                          </div>';
+                }
+                ?>
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- END CONTAINER -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- END MAIN CONTENT -->
 
-        <!-- Footer -->
+        <!-- FOOTER -->
         <?php $this->load->view('layouts/footer'); ?>
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- END CONTENT WRAPPER -->
 
 </div>
-<!-- End of Wrapper -->
+<!-- END WRAPPER -->

@@ -1,277 +1,232 @@
 <?php
-/**
- * Kategori.php
- *
- * Controller untuk mengelola halaman kategori produk
- * Semua nama function menggunakan bahasa Indonesia
- *
- * @author    SMK Assalafiyyah Sleman
- * @version   1.0
- */
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Kategori extends CI_Controller {
 
-    /**
-     * Constructor - dipanggil saat pertama kali controller di-load
-     * Fungsi ini untuk load model, library, dll yang dibutuhkan
-     */
+    private $data = [];
+
     public function __construct()
     {
         parent::__construct();
 
-        // Load model Kategori_model
         $this->load->model('Kategori_model');
-
-        // Load library form_validation untuk validasi input form
         $this->load->library('form_validation');
-
-        // Load helper URL untuk fungsi base_url(), site_url(), dll
-        $this->load->helper('url');
+        $this->load->helper(['url', 'form']);
     }
 
     /**
-     * ============================================================
-     * FUNCTION: kategori_index()
-     * ============================================================
-     * Halaman daftar semua kategori
-     * URL: /kategori
-     *
-     * Fungsi ini:
-     * 1. Mengambil semua data kategori dari database
-     * 2. Menampilkan data ke tabel dengan DataTables
+     * =========================================================
+     * METHOD RENDER
+     * =========================================================
      */
-    public function kategori_index()
+    private function render($view)
     {
-        // Set judul halaman
-        $this->data['judul_halaman'] = 'Daftar Kategori Produk';
+        $this->data['content_view'] = $view;
 
-        // Ambil semua data kategori dari model
-        $this->data['kategori'] = $this->Kategori_model->ambil_semua();
-
-        // Set view yang akan ditampilkan
-        $this->data['content_view'] = 'kategori/index';
-
-        // Load layout utama dengan data di atas
         $this->load->view('layouts/main', $this->data);
     }
 
     /**
-     * ============================================================
-     * FUNCTION: kategori_tambah()
-     * ============================================================
-     * Halaman form tambah kategori baru
-     * URL: /kategori/tambah
-     *
-     * Fungsi ini:
-     * 1. Menampilkan form input kategori
-     * 2. Memproses data saat form disubmit
-     * 3. Validasi input form
-     * 4. Simpan data ke database jika valid
+     * =========================================================
+     * DAFTAR KATEGORI
+     * URL: kategori
+     * =========================================================
      */
-    public function kategori_tambah()
+    public function index()
     {
-        // Set judul halaman
-        $this->data['judul_halaman'] = 'Tambah Kategori Baru';
+        $this->data['page_title'] = 'Daftar Kategori';
 
-        // Aturan validasi form
-        // - name: wajib diisi, harus unik (tidak boleh sama dengan yang sudah ada)
-        // - description: boleh kosong
-        $this->form_validation->set_rules(
-            'name',                          // Nama field input
-            'Nama Kategori',                 // Label human-readable
-            'required|trim|is_unique[categories.name]'  // Aturan validasi
-        );
+        // Ambil semua kategori + jumlah produk
+        $this->data['kategori'] =
+            $this->Kategori_model->ambil_semua();
 
-        $this->form_validation->set_rules(
-            'description',
-            'Deskripsi',
-            'trim'
-        );
-
-        // Aturan pesan error dalam bahasa Indonesia
-        $this->form_validation->set_message('required', '{field} wajib diisi!');
-        $this->form_validation->set_message('is_unique', '{field} sudah ada, gunakan nama lain!');
-
-        // Cek apakah form sudah disubmit dan valid
-        if ($this->form_validation->run() === TRUE)
-        {
-            // Siapkan data untuk disimpan ke database
-            $data_kategori = array(
-                'name' => $this->input->post('name'),           // Ambil dari input form
-                'description' => $this->input->post('description')
-            );
-
-            // Simpan ke database melalui model
-            $id_kategori = $this->Kategori_model->tambah($data_kategori);
-
-            // Cek apakah penyimpanan berhasil
-            if ($id_kategori)
-            {
-                // Set pesan sukses menggunakan flashdata
-                $this->session->set_flashdata('success',
-                    'Kategori <b>' . $data_kategori['name'] . '</b> berhasil ditambahkan!');
-
-                // Redirect ke halaman daftar kategori
-                redirect('kategori', 'refresh');
-            }
-            else
-            {
-                // Set pesan error
-                $this->session->set_flashdata('error',
-                    'Gagal menambahkan kategori. Silakan coba lagi.');
-            }
-        }
-
-        // Jika form belum disubmit atau validasi gagal, tampilkan form
-        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
-        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
+        $this->render('kategori/index');
     }
 
     /**
-     * ============================================================
-     * FUNCTION: kategori_edit($id)
-     * ============================================================
-     * Halaman form edit kategori
-     * URL: /kategori/edit/{id}
-     *
-     * @param int $id    ID kategori yang akan diedit
-     *
-     * Fungsi ini:
-     * 1. Mengambil data kategori berdasarkan ID
-     * 2. Menampilkan form edit dengan data yang sudah ada
-     * 3. Memproses update data saat form disubmit
+     * =========================================================
+     * TAMBAH KATEGORI
+     * URL: kategori/tambah
+     * =========================================================
      */
-    public function kategori_edit($id = NULL)
+    public function tambah()
     {
-        // Set judul halaman
-        $this->data['judul_halaman'] = 'Edit Kategori';
+        $this->data['page_title'] = 'Tambah Kategori';
 
-        // Ambil data kategori yang akan diedit
-        $kategori = $this->Kategori_model->ambil_berdasarkan_id($id);
+        $this->validasi_form();
 
-        // Cek apakah kategori ada
+        if ($this->form_validation->run() == TRUE)
+        {
+            $data = [
+                'name' => $this->input->post('name', TRUE),
+                'description' => $this->input->post('description', TRUE)
+            ];
+
+            $insert = $this->Kategori_model->tambah($data);
+
+            if ($insert)
+            {
+                $this->session->set_flashdata(
+                    'success',
+                    'Kategori berhasil ditambahkan.'
+                );
+
+                redirect('kategori');
+            }
+
+            $this->session->set_flashdata(
+                'error',
+                'Gagal menambahkan kategori.'
+            );
+        }
+
+        $this->render('kategori/tambah');
+    }
+
+    /**
+     * =========================================================
+     * EDIT KATEGORI
+     * URL: kategori/edit/1
+     * =========================================================
+     */
+    public function edit($id = NULL)
+    {
+        if (!$id || !is_numeric($id))
+        {
+            show_404();
+        }
+
+        $kategori =
+            $this->Kategori_model->ambil_berdasarkan_id($id);
+
         if (!$kategori)
         {
-            // Jika tidak ada, tampilkan pesan error dan redirect
-            $this->session->set_flashdata('error',
-                'Kategori tidak ditemukan!');
-
-            redirect('kategori', 'refresh');
-        }
-
-        // Aturan validasi form
-        // Sama dengan tambah, tapi nama harus unik KEUALI dirinya sendiri
-        $this->form_validation->set_rules(
-            'name',
-            'Nama Kategori',
-            'required|trim|callback_cek_nama_kategori[' . $id . ']'
-        );
-
-        $this->form_validation->set_rules(
-            'description',
-            'Deskripsi',
-            'trim'
-        );
-
-        // Aturan pesan error
-        $this->form_validation->set_message('required', '{field} wajib diisi!');
-
-        // Cek apakah form disubmit dan valid
-        if ($this->form_validation->run() === TRUE)
-        {
-            // Siapkan data untuk diupdate
-            $data_kategori = array(
-                'name' => $this->input->post('name'),
-                'description' => $this->input->post('description')
+            $this->session->set_flashdata(
+                'error',
+                'Kategori tidak ditemukan.'
             );
 
-            // Update data melalui model
-            $hasil = $this->Kategori_model->update($id, $data_kategori);
-
-            // Cek apakah update berhasil
-            if ($hasil)
-            {
-                $this->session->set_flashdata('success',
-                    'Kategori <b>' . $data_kategori['name'] . '</b> berhasil diupdate!');
-
-                redirect('kategori', 'refresh');
-            }
-            else
-            {
-                $this->session->set_flashdata('error',
-                    'Gagal mengupdate kategori. Silakan coba lagi.');
-            }
+            redirect('kategori');
         }
 
-        // Kirim data kategori ke view
+        $this->data['page_title'] = 'Edit Kategori';
         $this->data['kategori'] = $kategori;
 
-        // Tampilkan form edit
-        $this->data['content_view'] = 'kategori/index';  // ✅ key benar
-        $this->load->view('layouts/main', $this->data);   // ✅ nama file benar
+        $this->validasi_form($id);
+
+        if ($this->form_validation->run() == TRUE)
+        {
+            $data = [
+                'name' => $this->input->post('name', TRUE),
+                'description' => $this->input->post('description', TRUE)
+            ];
+
+            $update =
+                $this->Kategori_model->update($id, $data);
+
+            if ($update)
+            {
+                $this->session->set_flashdata(
+                    'success',
+                    'Kategori berhasil diupdate.'
+                );
+
+                redirect('kategori');
+            }
+
+            $this->session->set_flashdata(
+                'error',
+                'Gagal mengupdate kategori.'
+            );
+        }
+
+        $this->render('kategori/edit');
     }
 
     /**
-     * ============================================================
-     * FUNCTION: kategori_hapus($id)
-     * ============================================================
-     * Menghapus data kategori
-     * URL: /kategori/hapus/{id}
-     *
-     * @param int $id    ID kategori yang akan dihapus
-     *
-     * Fungsi ini:
-     * 1. Memanggil model untuk menghapus data
-     * 2. Mengecek apakah kategori bisa dihapus (tidak ada produk yang menggunakannya)
-     * 3. Memberikan feedback ke user
+     * =========================================================
+     * HAPUS KATEGORI
+     * URL: kategori/hapus/1
+     * =========================================================
      */
-    public function kategori_hapus($id)
+    public function hapus($id = NULL)
     {
-        // Panggil model untuk menghapus
-        $hasil = $this->Kategori_model->hapus($id);
-
-        // Cek hasil operasi hapus
-        if ($hasil['status'] === TRUE)
+        if (!$id || !is_numeric($id))
         {
-            // Jika berhasil
-            $this->session->set_flashdata('success', $hasil['message']);
+            show_404();
+        }
+
+        $hapus = $this->Kategori_model->hapus($id);
+
+        if ($hapus['status'])
+        {
+            $this->session->set_flashdata(
+                'success',
+                $hapus['message']
+            );
         }
         else
         {
-            // Jika gagal (misalnya masih ada produk yang menggunakan)
-            $this->session->set_flashdata('error', $hasil['message']);
+            $this->session->set_flashdata(
+                'error',
+                $hapus['message']
+            );
         }
 
-        // Redirect kembali ke daftar kategori
-        redirect('kategori', 'refresh');
+        redirect('kategori');
     }
 
     /**
-     * ============================================================
-     * CALLBACK: cek_nama_kategori($nama, $id)
-     * ============================================================
-     * Callback function untuk validasi nama kategori unique
-     * Dicek saat edit: nama tidak boleh sama dengan kategori lain
-     *
-     * @param string $nama    Nama kategori yang dicek
-     * @param int $id         ID kategori yang sedang diedit
-     * @return bool           TRUE jika valid, FALSE jika tidak
+     * =========================================================
+     * VALIDASI FORM
+     * =========================================================
+     */
+    private function validasi_form($id = NULL)
+    {
+        $rule = $id
+            ? 'required|trim|callback_cek_nama_kategori['.$id.']'
+            : 'required|trim|is_unique[categories.name]';
+
+        $this->form_validation->set_rules(
+            'name',
+            'Nama Kategori',
+            $rule
+        );
+
+        $this->form_validation->set_rules(
+            'description',
+            'Deskripsi',
+            'trim'
+        );
+
+        $this->form_validation->set_message(
+            'required',
+            '{field} wajib diisi.'
+        );
+
+        $this->form_validation->set_message(
+            'is_unique',
+            '{field} sudah digunakan.'
+        );
+    }
+
+    /**
+     * =========================================================
+     * CALLBACK VALIDASI NAMA
+     * =========================================================
      */
     public function cek_nama_kategori($nama, $id)
     {
-        // Panggil fungsi cek_nama dari model
         if ($this->Kategori_model->cek_nama($nama, $id))
         {
-            // Jika nama sudah ada
-            $this->form_validation->set_message('cek_nama_kategori',
-                '{field} sudah digunakan oleh kategori lain!');
+            $this->form_validation->set_message(
+                'cek_nama_kategori',
+                '{field} sudah digunakan kategori lain.'
+            );
 
             return FALSE;
         }
 
-        // Jika nama belum ada, valid
         return TRUE;
     }
 }

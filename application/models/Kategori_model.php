@@ -29,14 +29,25 @@ class Kategori_model extends CI_Model {
      */
     public function ambil_semua()
     {
-        // Query: SELECT * FROM categories ORDER BY name ASC
-        $this->db->order_by('name', 'ASC');
-        $query = $this->db->get($this->tabel);
+        $this->db->select('
+            categories.*,
+            COUNT(products.id) as jumlah_produk
+        ');
 
-        // Kembalikan hasil query sebagai object array
-        return $query->result();
+        $this->db->from($this->tabel);
+
+        $this->db->join(
+            'products',
+            'products.category_id = categories.id',
+            'left'
+        );
+
+        $this->db->group_by('categories.id');
+
+        $this->db->order_by('categories.name', 'ASC');
+
+        return $this->db->get()->result();
     }
-
     /**
      * ============================================================
      * FUNGSI: ambil_berdasarkan_id($id)
