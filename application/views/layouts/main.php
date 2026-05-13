@@ -2,6 +2,12 @@
 
 <div id="wrapper">
 
+    <?php if(isset($page_title)): ?>
+    <title><?= $page_title ?> - Toko Online</title>
+    <?php else: ?>
+    <title>Toko Online - SMK Assalafiyyah</title>
+    <?php endif; ?>
+
     <!-- SIDEBAR -->
     <?php $this->load->view('layouts/sidebar'); ?>
 
