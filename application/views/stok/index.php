@@ -14,9 +14,7 @@
 <!-- Page Heading -->
  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">
-        <i class="fas fa-boxes"></i> Dashboard Manajemen Stok
-    </h1>
+    
     <div>
         <a href="<?= base_url('stok/stok_masuk') ?>" class="btn btn-success btn-sm shadow-sm">
             <i class="fas fa-plus-circle fa-sm"></i> Stok Masuk
