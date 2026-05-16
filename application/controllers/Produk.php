@@ -135,7 +135,7 @@ class Produk extends CI_Controller {
     public function edit($id = NULL)
     {
         $this->data['judul_halaman'] = 'Edit Produk';
-        $this->data['produk'] = $this->Produk_model->ambil_semua();
+        $this->data['kategori'] = $this->Kategori_model->ambil_semua();
 
         // Ambil data produk yang akan diedit
         $produk = $this->Produk_model->ambil_berdasarkan_id($id);

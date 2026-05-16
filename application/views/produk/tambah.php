@@ -108,7 +108,7 @@
                                     ]) ?>
                                     <?= form_label('Pilih Gambar...', 'image', ['class' => 'custom-file-label']) ?>
                                 </div>
-                                <small class="form-text text-muted">
+                                <small class="form-text text-muted">    
                                     Format: JPG, PNG, GIF, JPEG, WEBP. Maks: 2MB.
                                 </small>
                                 <div id="preview_gambar" class="mt-2 text-center"></div>

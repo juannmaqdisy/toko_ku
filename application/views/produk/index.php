@@ -99,12 +99,12 @@
                         <td class="text-center">
                             <a href="<?= base_url('produk/edit/' . $p->id) ?>"
                                class="btn btn-warning btn-sm" title="Edit">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-edit">Edit</i>
                             </a>
 
                             <button onclick="hapus_produk(<?= $p->id ?>, '<?= htmlspecialchars($p->name) ?>')"
                                     class="btn btn-danger btn-sm" title="Hapus">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash">Hapus</i>
                             </button>
                         </td>
                     </tr>
