@@ -12,18 +12,18 @@
 ?>
 
 <!-- Page Heading -->
- <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
+ 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     
     <div>
-        <a href="<?= base_url('stok/stok_masuk') ?>" class="btn btn-success btn-sm shadow-sm">
+        <a href="<?= base_url('stok/masuk') ?>" class="btn btn-success btn-sm shadow-sm">
             <i class="fas fa-plus-circle fa-sm"></i> Stok Masuk
         </a>
-        <a href="<?= base_url('stok/stok_keluar') ?>" class="btn btn-danger btn-sm shadow-sm ml-1">
+        <a href="<?= base_url('stok/keluar') ?>" class="btn btn-danger btn-sm shadow-sm ml-1">
             <i class="fas fa-minus-circle fa-sm"></i> Stok Keluar
         </a>
-        <a href="<?= base_url('stok/stok_laporan') ?>" class="btn btn-primary btn-sm shadow-sm ml-1">
-            <i class="fas fa-file-alt fa-sm"></i> Laporan
+        <a href="<?= base_url('stok/riwayat') ?>" class="btn btn-primary btn-sm shadow-sm ml-1">
+            <i class="fas fa-file-alt fa-sm"></i> Riwayat
         </a>
     </div>
 </div>
@@ -263,15 +263,15 @@
         </h6>
         <div>
             <!-- Shortcut filter ke halaman riwayat, sesuai stok_riwayat() -->
-            <a href="<?= base_url('stok/stok_riwayat') ?>?tipe=in"
+            <a href="<?= base_url('stok/masuk') ?>?tipe=in"
                class="btn btn-success btn-xs mr-1">
                 <i class="fas fa-arrow-up"></i> Masuk
             </a>
-            <a href="<?= base_url('stok/stok_riwayat') ?>?tipe=out"
+            <a href="<?= base_url('stok/keluar') ?>?tipe=out"
                class="btn btn-danger btn-xs mr-1">
                 <i class="fas fa-arrow-down"></i> Keluar
             </a>
-            <a href="<?= base_url('stok/stok_riwayat') ?>" class="btn btn-info btn-sm">
+            <a href="<?= base_url('stok/riwayat') ?>" class="btn btn-info btn-sm">
                 Lihat Semua <i class="fas fa-arrow-right fa-sm"></i>
             </a>
         </div>

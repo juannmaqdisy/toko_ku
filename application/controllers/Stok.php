@@ -81,7 +81,7 @@ class Stok extends CI_Controller {
      * [FIX #3] Nama method stok_masuk() → URL harus /stok/stok_masuk
      * Di view gunakan: base_url('stok/stok_masuk')
      */
-    public function stok_masuk()
+    public function masuk()
     {
         $this->data['judul_halaman'] = 'Stok Masuk (Restock)';
         $this->data['produk']        = $this->Produk_model->ambil_aktif();
@@ -124,7 +124,7 @@ class Stok extends CI_Controller {
         }
 
         $this->data['view_konten'] = 'stok/masuk';
-        $this->load->view('layouts/utama', $this->data);
+        $this->load->view('layouts/main', $this->data);
     }
 
     /**

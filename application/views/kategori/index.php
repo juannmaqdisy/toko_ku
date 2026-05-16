@@ -11,7 +11,7 @@
 
 // Card container untuk tampilan yang rapi
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
+
 <div class="card shadow mb-4">
 
     <!-- Card Header: Judul dan tombol tambah -->
@@ -89,21 +89,18 @@
 
                             <!-- Tombol aksi -->
                             <td>
-                                <!-- Tombol Edit -->
+                            <div class="btn-group" role="group">
                                 <a href="<?= base_url('kategori/edit/' . $kat->id) ?>"
-                                
-                                   class="btn btn-warning btn-sm"
-                                   title="Edit Kategori">
-                                    <i class="fas fa-edit">Edit</i>
+                                class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
                                 </a>
 
-                                <!-- Tombol Hapus dengan konfirmasi SweetAlert -->
                                 <button onclick="hapus_kategori(<?= $kat->id ?>, '<?= htmlspecialchars($kat->name) ?>')"
-                                        class="btn btn-danger btn-sm"
-                                        title="Hapus Kategori">
-                                    <i class="fas fa-trash">Hapus</i>
+                                        class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Hapus
                                 </button>
-                            </td>
+                            </div>
+                        </td>
                         </tr>
                     <?php
                         endforeach;
