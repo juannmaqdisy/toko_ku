@@ -35,9 +35,6 @@
                                 <?= form_label('Kategori', 'category_id', ['class' => 'font-weight-bold']) ?>
                                 <select name="category_id" id="category_id" class="form-control" required>
                                     <option value="">-- Pilih Kategori --</option>
-                                    <option value="">-- Makanan --</option>
-                                    <option value="">-- Minuman --</option>
-                                    <option value="">-- Baju --</option>
                                     <?php foreach ($kategori as $k): ?>
                                     <option value="<?= $k->id ?>">
                                         <?= htmlspecialchars($k->name) ?>
@@ -112,7 +109,7 @@
                                     <?= form_label('Pilih Gambar...', 'image', ['class' => 'custom-file-label']) ?>
                                 </div>
                                 <small class="form-text text-muted">
-                                    Format: JPG, PNG, GIF. Maks: 2MB.
+                                    Format: JPG, PNG, GIF, JPEG, WEBP. Maks: 2MB.
                                 </small>
                                 <div id="preview_gambar" class="mt-2 text-center"></div>
                             </div>
@@ -203,7 +200,7 @@
                     <!-- Tombol Aksi -->
                     <div class="form-group">
                         <?= form_submit('submit', 'Simpan Produk', 'class="btn btn-primary btn-block"') ?>
-                        <a href="<?= base_url('produk') ?>" class="btn btn-outline-secondary btn-block">
+                        <a href="<?= base_url('produk/tambah') ?>" class="btn btn-outline-secondary btn-block">
                             <i class="fas fa-times"></i> Batal
                         </a>
                     </div>

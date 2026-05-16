@@ -60,7 +60,7 @@ class Produk extends CI_Controller {
     public function tambah()
     {
         $this->data['judul_halaman'] = 'Tambah Produk Baru';
-        $this->data['produk'] = $this->Produk_model->ambil_semua();
+        $this->data['kategori'] = $this->Kategori_model->ambil_semua();
 
         // Aturan validasi form
         $this->form_validation->set_rules('category_id', 'Kategori', 'required');
@@ -261,29 +261,30 @@ class Produk extends CI_Controller {
      */
     private function _upload_gambar()
     {
-        // Konfigurasi upload
+        // Jika tidak upload gambar
+        if (empty($_FILES['image']['name'])) {
+            return null;
+        }
+
         $config['upload_path'] = FCPATH . 'uploads/products/';
-        $config['allowed_types'] = 'jpg|jpeg|png|gif';
-        $config['max_size'] = 2048;              // 2MB dalam kilobyte
-        $config['encrypt_name'] = TRUE;          // Nama file di-acak
+        $config['allowed_types'] = 'jpg|jpeg|png|gif|webp';
+        $config['max_size'] = 2048;
+        $config['encrypt_name'] = TRUE;
 
-        // Load library upload dengan konfigurasi di atas
-        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
 
-        // Lakukan upload
         if (!$this->upload->do_upload('image'))
         {
-            // Upload gagal, set pesan error
-            $this->session->set_flashdata('error',
-                'Upload gambar gagal: ' . $this->upload->display_errors('', ' '));
+            $this->session->set_flashdata(
+                'error',
+                'Upload gambar gagal: ' . $this->upload->display_errors('', '')
+            );
 
             return FALSE;
         }
 
-        // Upload berhasil, kembalikan nama file
         return $this->upload->data('file_name');
     }
-
     /**
      * ============================================================
      * CALLBACK: cek_barcode_produk($barcode, $id)
