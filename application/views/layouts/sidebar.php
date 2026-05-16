@@ -48,7 +48,7 @@
 
     <!-- Nav Item - Stok -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('stock') ?>">
+        <a class="nav-link" href="<?= base_url('stok') ?>">
             <i class="fas fa-fw fa-warehouse"></i>
             <span>Stok</span>
         </a>
