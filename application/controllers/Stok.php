@@ -107,7 +107,7 @@ class Stok extends CI_Controller {
                 $jumlah,
                 $harga,
                 $keterangan,
-                $this->data['current_user']->id  // [FIX #2] sudah aman dari session
+                1 // [FIX #2] sudah aman dari session
             );
 
             if ($hasil)
@@ -123,7 +123,7 @@ class Stok extends CI_Controller {
             redirect('stok', 'refresh');
         }
 
-        $this->data['view_konten'] = 'stok/masuk';
+        $this->data['content_view'] = 'stok/masuk';
         $this->load->view('layouts/main', $this->data);
     }
 
@@ -181,7 +181,7 @@ class Stok extends CI_Controller {
             redirect('stok', 'refresh');
         }
 
-        $this->data['view_konten'] = 'stok/keluar';
+        $this->data['content_view'] = 'stok/keluar';
         $this->load->view('layouts/utama', $this->data);
     }
 
@@ -207,7 +207,7 @@ class Stok extends CI_Controller {
         $this->data['tipe']         = $tipe;
         $this->data['semua_produk'] = $this->Produk_model->ambil_aktif();
 
-        $this->data['view_konten'] = 'stok/riwayat';
+        $this->data['content_view'] = 'stok/riwayat';
         $this->load->view('layouts/utama', $this->data);
     }
 
@@ -239,7 +239,7 @@ class Stok extends CI_Controller {
         $this->data['tanggal_selesai']  = $tanggal_selesai;
         $this->data['produk_id']        = $produk_id;
 
-        $this->data['view_konten'] = 'stok/laporan';
+        $this->data['content_view'] = 'stok/laporan';
         $this->load->view('layouts/utama', $this->data);
     }
 

@@ -22,7 +22,7 @@
                     Pilih produk dan masukkan jumlah stok yang masuk. Harga beli bersifat opsional.
                 </div>
 
-                <?= form_open('stok/stok_masuk', ['id' => 'formStokMasuk']) ?>
+                <?= form_open('stok/masuk', ['id' => 'formStokMasuk']) ?>
 
                     <!-- Pilih Produk -->
                     <div class="form-group">
@@ -33,7 +33,7 @@
                             <option value="<?= $p->id ?>"
                                     data-stok="<?= $p->stock ?>"
                                     data-satuan="<?= $p->unit ?>"
-                                    data-harga="<?= $p->buy_price ?>">
+                                    data-harga="<?= $p->categories ?>">
                                 <?= htmlspecialchars($p->name) ?>
                                 (Stok: <?= $p->stock ?> <?= $p->unit ?>)
                             </option>
