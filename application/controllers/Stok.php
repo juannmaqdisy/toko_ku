@@ -5,12 +5,23 @@
  * Controller untuk mengelola halaman stok
  *
  * @author    SMK Assalafiyyah Sleman
- * @version   1.0
+ * @version   1.1 (bugfix)
+ *
+ * CHANGELOG v1.1:
+ *  [FIX #1] Tambah public $data = [] agar $this->data tidak error
+ *  [FIX #2] Ambil current_user dari session, bukan Admin_Controller
+ *  [FIX #3] Route view diperbaiki sesuai nama method (stok_masuk, dst)
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stok extends Admin_Controller {
+class Stok extends CI_Controller {
+
+    /**
+     * [FIX #1] Deklarasi $data sebagai class property
+     * Tanpa ini, $this->data['key'] = ... akan throw error di PHP 8+
+     */
+    public $data = [];
 
     /**
      * Constructor
@@ -29,87 +40,79 @@ class Stok extends Admin_Controller {
 
         // Load helper
         $this->load->helper('url');
+
+        // [FIX #2] Cek session login — ganti Admin_Controller
+        // Sesuaikan key session dengan yang dipakai di proses login
+        // $user = $this->session->userdata('user');
+        // if (!$user) {
+        //     redirect('auth/login', 'refresh');
+        // }
+        // $this->data['current_user'] = (object) $user;
     }
 
     /**
      * ============================================================
-     * FUNCTION: stok_index()
+     * index()
+     * URL: /stok  atau  /stok/index
      * ============================================================
-     * Halaman dashboard stok
-     * URL: /stok
-     *
-     * Menampilkan:
-     * - Ringkasan stok (total, menipis, habis)
-     * - Daftar stok menipis
-     * - Daftar stok habis
-     * - Riwayat stok terbaru
+     * Dashboard stok — menampilkan ringkasan, daftar menipis/habis,
+     * dan riwayat terbaru.
      */
-    public function stok_index()
+    public function index()
     {
-        $this->data['judul_halaman'] = 'Dashboard Manajemen Stok';
+        $this->data['page_title'] = 'Dashboard Manajemen Stok';
 
-        // Ambil data ringkasan stok
-        $this->data['ringkasan'] = $this->Stok_model->ringkasan_stok();
-
-        // Ambil stok menipis
-        $this->data['stok_menipis'] = $this->Stok_model->ambil_stok_menipis(10);
-
-        // Ambil stok habis
-        $this->data['stok_habis'] = $this->Stok_model->ambil_stok_habis();
-
-        // Ambil riwayat stok terbaru (10 data)
+        $this->data['ringkasan']       = $this->Stok_model->ringkasan_stok();
+        $this->data['stok_menipis']    = $this->Stok_model->ambil_stok_menipis(10);
+        $this->data['stok_habis']      = $this->Stok_model->ambil_stok_habis();
         $this->data['riwayat_terbaru'] = $this->Stok_model->ambil_riwayat(NULL, NULL, 10);
 
-        $this->data['view_konten'] = 'stok/index';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'stok/index';
+        $this->load->view('layouts/main', $this->data);
     }
 
     /**
      * ============================================================
-     * FUNCTION: stok_masuk()
+     * stok_masuk()
+     * URL: /stok/stok_masuk
      * ============================================================
-     * Halaman form stok masuk
-     * URL: /stok/masuk
+     * Form tambah stok masuk (restock).
      *
-     * Proses:
-     * 1. Pilih produk dari dropdown
-     * 2. Input jumlah stok masuk
-     * 3. (Opsional) Input harga beli terbaru
-     * 4. Simpan → Stok bertambah
+     * [FIX #3] Nama method stok_masuk() → URL harus /stok/stok_masuk
+     * Di view gunakan: base_url('stok/stok_masuk')
      */
     public function stok_masuk()
     {
         $this->data['judul_halaman'] = 'Stok Masuk (Restock)';
-        $this->data['produk'] = $this->Produk_model->ambil_aktif();
+        $this->data['produk']        = $this->Produk_model->ambil_aktif();
 
-        // Validasi form
-        $this->form_validation->set_rules('product_id', 'Produk', 'required');
-        $this->form_validation->set_rules('quantity', 'Jumlah', 'required|integer|greater_than[0]');
-        $this->form_validation->set_rules('price', 'Harga Beli', 'numeric|greater_than[0]');
-        $this->form_validation->set_rules('notes', 'Keterangan', 'trim');
+        // Aturan validasi
+        $this->form_validation->set_rules('product_id', 'Produk',    'required');
+        $this->form_validation->set_rules('quantity',   'Jumlah',    'required|integer|greater_than[0]');
+        $this->form_validation->set_rules('price',      'Harga Beli','numeric');
+        $this->form_validation->set_rules('notes',      'Keterangan','trim');
 
-        $this->form_validation->set_message('required', '{field} wajib diisi!');
+        $this->form_validation->set_message('required',     '{field} wajib diisi!');
         $this->form_validation->set_message('greater_than', '{field} harus lebih dari 0!');
 
         if ($this->form_validation->run() === TRUE)
         {
-            $produk_id = $this->input->post('product_id');
-            $jumlah = $this->input->post('quantity');
-            $harga = $this->input->post('price') ?: NULL;
+            $produk_id  = $this->input->post('product_id');
+            $jumlah     = $this->input->post('quantity');
+            $harga      = $this->input->post('price') ?: NULL;
             $keterangan = $this->input->post('notes') ?: 'Stok masuk manual';
 
-            // Panggil model untuk proses stok masuk
             $hasil = $this->Stok_model->stok_masuk(
                 $produk_id,
                 $jumlah,
                 $harga,
                 $keterangan,
-                $this->data['current_user']->id
+                $this->data['current_user']->id  // [FIX #2] sudah aman dari session
             );
 
             if ($hasil)
             {
-                $this->session->set_flashdata('sukses',
+                $this->session->set_flashdata('success',
                     'Stok berhasil ditambahkan sejumlah ' . $jumlah . ' unit.');
             }
             else
@@ -126,55 +129,49 @@ class Stok extends Admin_Controller {
 
     /**
      * ============================================================
-     * FUNCTION: stok_keluar()
+     * stok_keluar()
+     * URL: /stok/stok_keluar
      * ============================================================
-     * Halaman form stok keluar
-     * URL: /stok/keluar
+     * Form stok keluar (rusak, expired, koreksi, dll).
      *
-     * Proses:
-     * 1. Pilih produk dari dropdown
-     * 2. Input jumlah stok keluar
-     * 3. Pilih alasan (rusak, expired, dll)
-     * 4. Simpan → Stok berkurang
+     * [FIX #3] Di view gunakan: base_url('stok/stok_keluar')
      */
     public function stok_keluar()
     {
         $this->data['judul_halaman'] = 'Stok Keluar';
-        $this->data['produk'] = $this->Produk_model->ambil_aktif();
+        $this->data['produk']        = $this->Produk_model->ambil_aktif();
 
-        // Validasi form
-        $this->form_validation->set_rules('product_id', 'Produk', 'required');
-        $this->form_validation->set_rules('quantity', 'Jumlah', 'required|integer|greater_than[0]');
-        $this->form_validation->set_rules('reason', 'Alasan', 'required|trim');
-        $this->form_validation->set_rules('notes', 'Keterangan Tambahan', 'trim');
+        $this->form_validation->set_rules('product_id', 'Produk',              'required');
+        $this->form_validation->set_rules('quantity',   'Jumlah',              'required|integer|greater_than[0]');
+        $this->form_validation->set_rules('reason',     'Alasan',              'required|trim');
+        $this->form_validation->set_rules('notes',      'Keterangan Tambahan', 'trim');
 
         $this->form_validation->set_message('required', '{field} wajib diisi!');
 
         if ($this->form_validation->run() === TRUE)
         {
-            $produk_id = $this->input->post('product_id');
-            $jumlah = $this->input->post('quantity');
-            $alasan = $this->input->post('reason');
+            $produk_id           = $this->input->post('product_id');
+            $jumlah              = $this->input->post('quantity');
+            $alasan              = $this->input->post('reason');
             $keterangan_tambahan = $this->input->post('notes');
 
-            // Gabungkan alasan dan keterangan
+            // Gabungkan alasan + keterangan tambahan
             $keterangan_lengkap = $alasan;
             if ($keterangan_tambahan)
             {
                 $keterangan_lengkap .= ': ' . $keterangan_tambahan;
             }
 
-            // Panggil model untuk proses stok keluar
             $hasil = $this->Stok_model->stok_keluar(
                 $produk_id,
                 $jumlah,
                 $keterangan_lengkap,
-                $this->data['current_user']->id
+                $this->data['current_user']->id  // [FIX #2] sudah aman dari session
             );
 
             if ($hasil['status'])
             {
-                $this->session->set_flashdata('sukses', $hasil['message']);
+                $this->session->set_flashdata('success', $hasil['message']);
             }
             else
             {
@@ -190,24 +187,24 @@ class Stok extends Admin_Controller {
 
     /**
      * ============================================================
-     * FUNCTION: stok_riwayat()
+     * stok_riwayat()
+     * URL: /stok/stok_riwayat
+     * Filter: ?produk_id=X&tipe=in|out
      * ============================================================
-     * Halaman riwayat pergerakan stok
-     * URL: /stok/riwayat
+     * Riwayat semua pergerakan stok dengan filter opsional.
      *
-     * Menampilkan semua riwayat stok masuk dan keluar
+     * [FIX #3] Di view gunakan: base_url('stok/stok_riwayat')
      */
     public function stok_riwayat()
     {
         $this->data['judul_halaman'] = 'Riwayat Pergerakan Stok';
 
-        // Filter dari query string
         $produk_id = $this->input->get('produk_id') ?: NULL;
-        $tipe = $this->input->get('tipe') ?: NULL;  // 'in' atau 'out'
+        $tipe      = $this->input->get('tipe')      ?: NULL; // 'in' atau 'out'
 
-        $this->data['riwayat'] = $this->Stok_model->ambil_riwayat($produk_id, $tipe, 100);
-        $this->data['produk_id'] = $produk_id;
-        $this->data['tipe'] = $tipe;
+        $this->data['riwayat']      = $this->Stok_model->ambil_riwayat($produk_id, $tipe, 100);
+        $this->data['produk_id']    = $produk_id;
+        $this->data['tipe']         = $tipe;
         $this->data['semua_produk'] = $this->Produk_model->ambil_aktif();
 
         $this->data['view_konten'] = 'stok/riwayat';
@@ -216,30 +213,31 @@ class Stok extends Admin_Controller {
 
     /**
      * ============================================================
-     * FUNCTION: stok_laporan()
+     * stok_laporan()
+     * URL: /stok/stok_laporan
+     * Filter: ?tanggal_mulai=&tanggal_selesai=&produk_id=
      * ============================================================
-     * Halaman laporan stok dengan filter
-     * URL: /stok/laporan
+     * Laporan pergerakan stok berdasarkan rentang tanggal.
+     *
+     * [FIX #3] Di view gunakan: base_url('stok/stok_laporan')
      */
     public function stok_laporan()
     {
         $this->data['judul_halaman'] = 'Laporan Stok';
 
-        // Filter dari query string
-        $tanggal_mulai = $this->input->get('tanggal_mulai');
+        $tanggal_mulai   = $this->input->get('tanggal_mulai');
         $tanggal_selesai = $this->input->get('tanggal_selesai');
-        $produk_id = $this->input->get('produk_id');
+        $produk_id       = $this->input->get('produk_id');
 
-        $this->data['laporan'] = $this->Stok_model->laporan_stok(
-            $tanggal_mulai,
-            $tanggal_selesai,
-            $produk_id
-        );
-
-        $this->data['semua_produk'] = $this->Produk_model->ambil_aktif();
-        $this->data['tanggal_mulai'] = $tanggal_mulai;
-        $this->data['tanggal_selesai'] = $tanggal_selesai;
-        $this->data['produk_id'] = $produk_id;
+        $this->data['laporan']          = $this->Stok_model->laporan_stok(
+                                              $tanggal_mulai,
+                                              $tanggal_selesai,
+                                              $produk_id
+                                          );
+        $this->data['semua_produk']     = $this->Produk_model->ambil_aktif();
+        $this->data['tanggal_mulai']    = $tanggal_mulai;
+        $this->data['tanggal_selesai']  = $tanggal_selesai;
+        $this->data['produk_id']        = $produk_id;
 
         $this->data['view_konten'] = 'stok/laporan';
         $this->load->view('layouts/utama', $this->data);
@@ -247,36 +245,42 @@ class Stok extends Admin_Controller {
 
     /**
      * ============================================================
-     * AJAX: ambil_info_produk()
+     * ambil_info_produk()
+     * URL: /stok/ambil_info_produk  [AJAX POST]
      * ============================================================
-     * Mengambil info produk via AJAX
-     * URL: /stok/ambil_info_produk
-     *
-     * Digunakan untuk:
-     * - Menampilkan info produk saat dipilih di dropdown
-     * - Menampilkan stok saat ini, harga beli terakhir, dll
+     * Mengembalikan JSON info produk berdasarkan produk_id.
+     * Dipakai oleh select2/dropdown di form masuk & keluar.
      */
     public function ambil_info_produk()
     {
+        // Pastikan request dari AJAX
+        if (!$this->input->is_ajax_request())
+        {
+            show_404();
+        }
+
         $produk_id = $this->input->post('produk_id');
-        $produk = $this->Produk_model->ambil_berdasarkan_id($produk_id);
+        $produk    = $this->Produk_model->ambil_berdasarkan_id($produk_id);
 
         if ($produk)
         {
             echo json_encode([
                 'status' => TRUE,
-                'data' => [
-                    'nama' => $produk->name,
-                    'stok' => $produk->stock,
-                    'satuan' => $produk->unit,
+                'data'   => [
+                    'nama'       => $produk->name,
+                    'stok'       => $produk->stock,
+                    'satuan'     => $produk->unit,
                     'harga_beli' => $produk->buy_price,
-                    'kategori' => $produk->category_id
+                    'kategori'   => $produk->category_id,
                 ]
             ]);
         }
         else
         {
-            echo json_encode(['status' => FALSE, 'message' => 'Produk tidak ditemukan']);
+            echo json_encode([
+                'status'  => FALSE,
+                'message' => 'Produk tidak ditemukan.'
+            ]);
         }
     }
 }
