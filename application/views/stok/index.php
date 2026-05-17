@@ -168,7 +168,7 @@
                                     </td>
                                     <td class="text-center">
                                         <!-- Sesuai stok_masuk(): product_id via query string -->
-                                        <a href="<?= base_url('stok/stok_masuk') ?>?product_id=<?= $p->id ?>"
+                                        <a href="<?= base_url('stok/masuk') ?>?product_id=<?= $p->id ?>"
                                            class="btn btn-success btn-xs" title="Restock">
                                             <i class="fas fa-plus"></i> Restock
                                         </a>
@@ -228,7 +228,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <a href="<?= base_url('stok/stok_masuk') ?>?product_id=<?= $p->id ?>"
+                                        <a href="<?= base_url('stok/masuk') ?>?product_id=<?= $p->id ?>"
                                            class="btn btn-success btn-xs" title="Restock">
                                             <i class="fas fa-plus"></i> Restock
                                         </a>
@@ -300,7 +300,7 @@
                                 </small>
                             </td>
                             <td>
-                                <a href="<?= base_url('stok/stok_riwayat') ?>?produk_id=<?= $r->product_id ?>"
+                                <a href="<?= base_url('stok/riwayat') ?>?produk_id=<?= $r->product_id ?>"
                                    class="text-dark">
                                     <strong><?= htmlspecialchars($r->product_name ?? '-') ?></strong>
                                 </a>

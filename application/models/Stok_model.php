@@ -38,105 +38,48 @@ class Stok_model extends CI_Model {
      */
     public function stok_masuk($produk_id, $jumlah, $harga = NULL, $keterangan = '', $user_id = NULL)
     {
-        // 1. Insert ke tabel history
+        // Insert history
         $data_history = array(
             'product_id' => $produk_id,
-            'type' => 'in',                              // 'in' = stok masuk
-            'quantity' => $jumlah,
-            'price' => $harga,
-            'notes' => $keterangan ?: 'Stok masuk manual',
-            'created_by' => $user_id ?: $this->ion_auth->get_user_id()
+            'type'       => 'in',
+            'quantity'   => $jumlah,
+            'price'      => $harga,
+            'notes'      => $keterangan ?: 'Stok masuk manual',
+            'created_by' => $user_id
         );
 
-        $this->db->insert($this->tabel, $data_history);
+        $this->db->insert('stock_history', $data_history);
 
-        // 2. Update stok produk
-        // Gunakan fungsi SQL: UPDATE products SET stock = stock + ? WHERE id = ?
+        // Ambil data produk dulu
+        $produk = $this->db->get_where('products', [
+            'id' => $produk_id
+        ])->row();
+
+        if (!$produk) {
+            return false;
+        }
+
+        // Update stok
         $this->db->set('stock', 'stock + ' . (int)$jumlah, FALSE);
-        $this->db->where('id', $produk_id);
 
-        // 3. Update harga beli rata-rata jika harga diinput
+        // Update harga beli jika ada
         if ($harga !== NULL && $harga > 0)
         {
-            // Ambil data produk saat ini
-            $produk = $this->db->get_where('products', ['id' => $produk_id])->row();
+            $stok_total = $produk->stock + $jumlah;
 
-            if ($produk)
-            {
-                // Hitung total nilai lama dan baru
-                $total_lama = $produk->buy_price * $produk->stock;
-                $total_baru = $harga * $jumlah;
-                $stok_total = $produk->stock + $jumlah;
+            $total_lama = ($produk->buy_price ?? 0) * $produk->stock;
+            $total_baru = $harga * $jumlah;
 
-                // Hitung harga beli rata-rata
-                $harga_rata_rata = $total_lama + $total_baru;
+            $harga_rata = ($total_lama + $total_baru) / $stok_total;
 
-                if ($stok_total > 0)
-                {
-                    $harga_rata_rata = $harga_rata_rata / $stok_total;
-                    $this->db->set('buy_price', $harga_rata_rata);
-                }
-            }
+            $this->db->set('buy_price', $harga_rata);
         }
 
-        // Eksekusi update
+        // WAJIB where lagi sebelum update
+        $this->db->where('id', $produk_id);
+
         return $this->db->update('products');
     }
-
-    /**
-     * ============================================================
-     * FUNGSI: stok_keluar()
-     * ============================================================
-     * Mencatat stok keluar dan mengurangi stok produk
-     *
-     * @param int $produk_id       ID produk
-     * @param int $jumlah          Jumlah stok keluar
-     * @param string $keterangan   Keterangan/alasan
-     * @param int $user_id         ID user yang mencatat
-     * @return array               Array status dan pesan
-     *
-     * Proses:
-     * 1. Cek apakah stok mencukupi
-     * 2. Insert ke tabel stock_history dengan type = 'out'
-     * 3. Update stok di tabel products (stock - jumlah)
-     */
-    public function stok_keluar($produk_id, $jumlah, $keterangan = '', $user_id = NULL)
-    {
-        // 1. Cek stok cukup atau tidak
-        $produk = $this->db->get_where('products', ['id' => $produk_id])->row();
-
-        if (!$produk)
-        {
-            return ['status' => FALSE, 'message' => 'Produk tidak ditemukan!'];
-        }
-
-        if ($produk->stock < $jumlah)
-        {
-            return [
-                'status' => FALSE,
-                'message' => 'Stok tidak mencukupi! Stok tersedia: ' . $produk->stock . ' ' . $produk->unit
-            ];
-        }
-
-        // 2. Insert ke tabel history
-        $data_history = array(
-            'product_id' => $produk_id,
-            'type' => 'out',                             // 'out' = stok keluar
-            'quantity' => $jumlah,
-            'notes' => $keterangan,
-            'created_by' => $user_id ?: $this->ion_auth->get_user_id()
-        );
-
-        $this->db->insert($this->tabel, $data_history);
-
-        // 3. Update stok produk
-        $this->db->set('stock', 'stock - ' . (int)$jumlah, FALSE);
-        $this->db->where('id', $produk_id);
-        $hasil = $this->db->update('products');
-
-        return ['status' => $hasil, 'message' => 'Stok berhasil dikurangi.'];
-    }
-
     /**
      * ============================================================
      * FUNGSI: ambil_riwayat()

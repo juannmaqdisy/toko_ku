@@ -23,26 +23,26 @@
             </div>
         <?php endif; ?>
 
-        <?= form_open('stok/stok_masuk') ?>
+        <?= form_open('stok/masuk', ['id' => 'formStokMasuk']) ?>
 
         <div class="row">
 
             <!-- Pilih Produk -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label><strong>Pilih Produk</strong></label>
-
-                    <select name="product_id" class="form-control" required>
+                    <?= form_label('Pilih Produk', 'product_id', ['class' => 'font-weight-bold']) ?>
+                    <select name="product_id" id="product_id" class="form-control select2" required>
                         <option value="">-- Pilih Produk --</option>
-
-                        <?php foreach($produk as $p): ?>
-                            <option value="<?= $p->id ?>">
-                                <?= $p->name ?> 
-                                (Stok: <?= $p->stock ?> <?= $p->unit ?>)
+                        <?php foreach ($produk as $p): ?>
+                            <option value="<?= $p->id ?>"
+                                    data-stok="<?= $p->stock ?>"
+                                    data-satuan="<?= $p->unit ?>"
+                                    data-harga="0">
+                                <?= htmlspecialchars($p->name) ?> (Stok: <?= $p->stock ?> <?= $p->unit ?>)
                             </option>
                         <?php endforeach; ?>
-
                     </select>
+                    <small class="form-text text-muted">Stok saat ini: <strong id="infoStok">-</strong></small>
                 </div>
             </div>
 
@@ -50,13 +50,15 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label><strong>Jumlah Stok Masuk</strong></label>
-
                     <input type="number"
                            name="quantity"
+                           id="quantity"
                            class="form-control"
                            min="1"
                            required
                            placeholder="Masukkan jumlah stok">
+                    <small class="form-text text-muted">Estimasi total stok: <strong id="estimasiStok">-</strong></small>
+                    <span id="satuan" class="d-none">-</span>
                 </div>
             </div>
 
@@ -68,9 +70,9 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label><strong>Harga Beli (Opsional)</strong></label>
-
                     <input type="number"
                            name="price"
+                           id="price"
                            class="form-control"
                            placeholder="Masukkan harga beli">
                 </div>
@@ -80,7 +82,6 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label><strong>Keterangan</strong></label>
-
                     <input type="text"
                            name="notes"
                            class="form-control"
@@ -107,3 +108,46 @@
 
     </div>
 </div>
+
+<!-- Script -->
+<script>
+$(document).ready(function() {
+    // Update info saat produk dipilih
+    $('#product_id').on('change', function() {
+        var selected = $(this).find('option:selected');
+        var stok = selected.data('stok');
+        var satuan = selected.data('satuan');
+        var harga = selected.data('harga');
+
+        // Update info stok
+        $('#infoStok').text(stok + ' ' + satuan);
+        $('#satuan').text(satuan);
+
+        // Update harga beli terakhir
+        if (harga > 0) {
+            $('#price').val(harga);
+        }
+
+        // Hitung estimasi
+        hitungEstimasi();
+    });
+
+    // Hitung estimasi saat jumlah berubah
+    $('#quantity').on('input', function() {
+        hitungEstimasi();
+    });
+
+    function hitungEstimasi() {
+        var stokSaatIni = parseInt($('#product_id').find('option:selected').data('stok')) || 0;
+        var jumlahMasuk = parseInt($('#quantity').val()) || 0;
+        var satuan = $('#satuan').text();   
+
+        if (satuan === '-') {
+            satuan = 'unit';
+        }
+
+        var totalStok = stokSaatIni + jumlahMasuk;
+        $('#estimasiStok').text(totalStok + ' ' + satuan);
+    }
+});
+</script>   
