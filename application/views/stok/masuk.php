@@ -33,7 +33,7 @@
                             <option value="<?= $p->id ?>"
                                     data-stok="<?= $p->stock ?>"
                                     data-satuan="<?= $p->unit ?>"
-                                    data-harga="<?= $p->categories ?>">
+                                    data-harga="0">
                                 <?= htmlspecialchars($p->name) ?>
                                 (Stok: <?= $p->stock ?> <?= $p->unit ?>)
                             </option>
@@ -152,7 +152,7 @@ $(document).ready(function() {
     function hitungEstimasi() {
         var stokSaatIni = parseInt($('#product_id').find('option:selected').data('stok')) || 0;
         var jumlahMasuk = parseInt($('#quantity').val()) || 0;
-        var satuan = $('#satuan.text();
+        var satuan = $('#satuan').text();   
 
         if (satuan === '-') {
             satuan = 'unit';
