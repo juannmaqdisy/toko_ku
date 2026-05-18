@@ -261,7 +261,7 @@
         </h6>
     </div>
 
-    <div class="card-body">
+  <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-sm" width="100%" cellspacing="0">
                 <thead class="thead-light">
@@ -270,8 +270,8 @@
                         <th>Produk</th>
                         <th width="10%" class="text-center">Tipe</th>
                         <th width="14%" class="text-center">Jumlah</th>
-                        <th width="14%" class="text-center">Stok Akhir</th>
                         <th>Keterangan</th>
+                        <th width="15%" class="text-center">Petugas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -279,19 +279,18 @@
                         <?php foreach ($riwayat_terbaru as $r): ?>
                         <tr>
                             <td>
-                                <small class="text-muted">
-                                    <!-- PERBAIKAN: Cek apakah created_at ada. Jika tidak, tampilkan strip (-) -->
-                                    <?= !empty($r->created_at) ? date('d M Y H:i', strtotime($r->created_at)) : '-' ?>
+                                <small class="text-dark">
+                                    <!-- PERBAIKAN: Menggunakan nama kolom 'date' sesuai skema DB Anda -->
+                                    <?= !empty($r->date) ? date('d M Y H:i', strtotime($r->date)) : '-' ?>
                                 </small>
                             </td>
                             <td>
-                                <a href="<?= base_url('stok/riwayat') ?>?produk_id=<?= $r->product_id ?? '' ?>"
-                                   class="text-dark">
-                                    <strong><?= htmlspecialchars($r->product_name ?? '-') ?></strong>
+                                <a href="<?= base_url('stok/riwayat') ?>?produk_id=<?= $r->product_id ?? '' ?>" class="text-dark">
+                                    <!-- PERBAIKAN: Menggunakan 'nama_produk' sesuai alias di Stok_model -->
+                                    <strong><?= htmlspecialchars($r->nama_produk ?? '-') ?></strong>
                                 </a>
                             </td>
                             <td class="text-center">
-                                <!-- type: 'in' = masuk, 'out' = keluar -->
                                 <?php if (($r->type ?? '') === 'in'): ?>
                                     <span class="badge badge-success">
                                         <i class="fas fa-arrow-up"></i> Masuk
@@ -307,14 +306,15 @@
                                 <?= number_format($r->quantity ?? 0) ?>
                                 <?= htmlspecialchars($r->unit ?? '') ?>
                             </td>
-                            <td class="text-center">
-                                <!-- PERBAIKAN: Gunakan null coalescing (?? 0) agar tidak error jika kosong -->
-                                <?= number_format($r->stock_after ?? 0) ?>
-                                <?= htmlspecialchars($r->unit ?? '') ?>
-                            </td>
                             <td>
                                 <small class="text-muted">
                                     <?= htmlspecialchars($r->notes ?? '-') ?>
+                                </small>
+                            </td>
+                            <td class="text-center">
+                                <!-- MENAMPILKAN: Nama petugas yang melakukan mutasi stok -->
+                                <small class="badge badge-light text-dark">
+                                    <i class="fas fa-user fa-xs"></i> <?= htmlspecialchars($r->first_name ?? 'System') ?>
                                 </small>
                             </td>
                         </tr>
