@@ -136,7 +136,7 @@ class Stok extends CI_Controller {
      *
      * [FIX #3] Di view gunakan: base_url('stok/stok_keluar')
      */
-    public function stok_keluar()
+    public function keluar()
     {
         $this->data['judul_halaman'] = 'Stok Keluar';
         $this->data['produk']        = $this->Produk_model->ambil_aktif();
@@ -155,36 +155,43 @@ class Stok extends CI_Controller {
             $alasan              = $this->input->post('reason');
             $keterangan_tambahan = $this->input->post('notes');
 
-            // Gabungkan alasan + keterangan tambahan
             $keterangan_lengkap = $alasan;
-            if ($keterangan_tambahan)
-            {
+            if ($keterangan_tambahan) {
                 $keterangan_lengkap .= ': ' . $keterangan_tambahan;
             }
 
+            // Ambil ID user secara aman dari session yang sudah aktif
+            $user_id = isset($this->data['current_user']->id) ? $this->data['current_user']->id : 1;
+
+            // FIX UTAMA: Memanggil method 'stok_keluar' pada Model, BUKAN 'stok_masuk'
             $hasil = $this->Stok_model->stok_keluar(
                 $produk_id,
                 $jumlah,
                 $keterangan_lengkap,
-                $this->data['current_user']->id  // [FIX #2] sudah aman dari session
+                $user_id
             );
 
-            if ($hasil['status'])
-            {
-                $this->session->set_flashdata('success', $hasil['message']);
+            // Kondisional pembacaan return value dari model (array/boolean)
+            if (is_array($hasil) && isset($hasil['status'])) {
+                $status = $hasil['status'];
+                $msg = $hasil['message'];
+            } else {
+                $status = $hasil;
+                $msg = $status ? 'Data stok keluar berhasil disimpan.' : 'Gagal memproses stok keluar.';
             }
-            else
-            {
-                $this->session->set_flashdata('error', $hasil['message']);
+
+            if ($status) {
+                $this->session->set_flashdata('success', $msg);
+            } else {
+                $this->session->set_flashdata('error', $msg);
             }
 
             redirect('stok', 'refresh');
         }
 
         $this->data['content_view'] = 'stok/keluar';
-        $this->load->view('layouts/utama', $this->data);
+        $this->load->view('layouts/main', $this->data);
     }
-
     /**
      * ============================================================
      * stok_riwayat()
