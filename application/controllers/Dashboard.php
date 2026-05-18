@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dashboard extends Admin_Controller {
+class Dashboard extends CI_Controller {
 
     public function __construct()
     {
@@ -19,7 +19,7 @@ class Dashboard extends Admin_Controller {
         $this->data['total_kategori']  = $this->Kategori_model->hitung_semua();
         $this->data['total_produk']    = $this->Produk_model->hitung_semua();
 
-        $this->data['view_konten'] = 'dashboard/index';
-        $this->load->view('layouts/utama', $this->data);
+        $this->data['content_view'] = 'dashboard/index';
+        $this->load->view('layouts/main', $this->data);
     }
 }

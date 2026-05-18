@@ -17,16 +17,7 @@ class MY_Controller extends CI_Controller {
     {
         parent::__construct();
 
-        // Load ion auth
-        $this->load->library('ion_auth');
-
-        // Cek login
-        if (!$this->ion_auth->logged_in()) {
-            redirect('auth/login', 'refresh');
-        }
-
-        // Data global
-        $this->set_global_data();
+        
     }
 
     protected function set_global_data()

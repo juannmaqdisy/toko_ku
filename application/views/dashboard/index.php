@@ -1,5 +1,5 @@
 <div class="container-fluid">
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sb-admin-2.css'); ?>">
     <!-- Judul Halaman -->
     <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
 
@@ -53,8 +53,8 @@
     <!-- Pesan Selamat Datang -->
     <div class="card shadow mb-4">
         <div class="card-body">
-            <h5>Selamat datang, <b><?= $current_user->first_name ?> <?= $current_user->last_name ?></b>!</h5>
-            <p class="text-muted">Anda login sebagai <b><?= $current_user_groups[0]->name ?? 'User' ?></b></p>
+            <h5>Selamat datang !</h5>
+            <p class="text-muted">Anda login sebagai user</p>
         </div>
     </div>
 

@@ -170,6 +170,12 @@ class Produk_model extends CI_Model {
         return $this->db->update($this->tabel);
     }
 
+    public function hitung_semua()
+    {
+        // Query: SELECT COUNT(*) FROM categories
+        return $this->db->count_all($this->tabel);
+    }
+
     /**
      * ============================================================
      * FUNGSI: hapus($id)

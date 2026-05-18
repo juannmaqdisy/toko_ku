@@ -48,7 +48,7 @@
                             Total Produk
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <?= $ringkasan->total_produk ?? 0 ?>
+                            <?= $this->data['total_produk']    = $this->Produk_model->hitung_semua(); ?>
                         </div>
                     </div>
                     <div class="col-auto">
