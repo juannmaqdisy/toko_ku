@@ -64,6 +64,9 @@ class Stok_model extends CI_Model {
 
             $harga_rata = ($total_lama + $total_baru) / $stok_total;
 
+            // Bulatkan harga
+            $harga_rata = round($harga_rata);
+
             $this->db->set('buy_price', $harga_rata);
         }
 

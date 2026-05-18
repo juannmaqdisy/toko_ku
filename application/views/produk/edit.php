@@ -18,7 +18,7 @@
 
 
                 <!-- Form dengan enctype untuk upload file -->
-                <?= form_open_multipart('produk/tambah', ['id' => 'formTambahProduk']) ?>
+                <?= form_open_multipart('produk/edit/'. $produk->id, ['id' => 'formEditProduk']) ?>
 
                     <div class="row">
                         <!-- Kolom Kiri -->
@@ -198,7 +198,6 @@
                         Kembali
                     </a>
                     <?= form_close(); ?>
-                    <?= form_close() ?>
 
             </div>
         </div>
