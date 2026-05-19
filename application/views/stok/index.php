@@ -66,7 +66,7 @@
                             Stok Normal
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <?= $ringkasan->stok_normal ?? 0 ?>
+                            <?= isset($ringkasan['stok_normal']) ? $ringkasan['stok_normal'] : 0; ?>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -86,7 +86,7 @@
                             Stok Menipis
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <?= $ringkasan->total_menipis ?? 0 ?>
+                            <?= isset($ringkasan['stok_menipis']) ? $ringkasan['stok_menipis'] : 0; ?>
                         </div>
                         <small class="text-muted">Di bawah batas minimum</small>
                     </div>

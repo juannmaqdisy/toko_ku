@@ -74,12 +74,12 @@ class Stok extends CI_Controller {
     /**
      * ============================================================
      * stok_masuk()
-     * URL: /stok/stok_masuk
+     * URL: /stok/masuk
      * ============================================================
      * Form tambah stok masuk (restock).
      *
-     * [FIX #3] Nama method stok_masuk() → URL harus /stok/stok_masuk
-     * Di view gunakan: base_url('stok/stok_masuk')
+     * [FIX #3] Nama method masuk() → URL harus /stok/masuk
+     * Di view gunakan: base_url('stok/masuk')
      */
     public function masuk()
     {
@@ -202,7 +202,7 @@ class Stok extends CI_Controller {
      *
      * [FIX #3] Di view gunakan: base_url('stok/stok_riwayat')
      */
-    public function stok_riwayat()
+    public function riwayat()
     {
         $this->data['judul_halaman'] = 'Riwayat Pergerakan Stok';
 
@@ -228,7 +228,7 @@ class Stok extends CI_Controller {
      *
      * [FIX #3] Di view gunakan: base_url('stok/stok_laporan')
      */
-    public function stok_laporan()
+    public function laporan()
     {
         $this->data['judul_halaman'] = 'Laporan Stok';
 
