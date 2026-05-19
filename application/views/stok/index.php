@@ -12,9 +12,7 @@
 ?>
 
 <!-- Page Heading -->
- 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    
     <div>
         <a href="<?= base_url('stok/masuk') ?>" class="btn btn-success btn-sm shadow-sm">
             <i class="fas fa-plus-circle fa-sm"></i> Stok Masuk
@@ -257,24 +255,10 @@
      Tipe: 'in' (masuk) atau 'out' (keluar)
      ============================================= -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-info">
             <i class="fas fa-history"></i> Riwayat Pergerakan Stok Terbaru
         </h6>
-        <div>
-            <!-- Shortcut filter ke halaman riwayat, sesuai stok_riwayat() -->
-            <a href="<?= base_url('stok/masuk') ?>?tipe=in"
-               class="btn btn-success btn-xs mr-1">
-                <i class="fas fa-arrow-up"></i> Masuk
-            </a>
-            <a href="<?= base_url('stok/keluar') ?>?tipe=out"
-               class="btn btn-danger btn-xs mr-1">
-                <i class="fas fa-arrow-down"></i> Keluar
-            </a>
-            <a href="<?= base_url('stok/riwayat') ?>" class="btn btn-info btn-sm">
-                Lihat Semua <i class="fas fa-arrow-right fa-sm"></i>
-            </a>
-        </div>
     </div>
 
     <div class="card-body">
@@ -296,18 +280,19 @@
                         <tr>
                             <td>
                                 <small class="text-muted">
-                                    <?= date('d M Y H:i', strtotime($r->created_at)) ?>
+                                    <!-- PERBAIKAN: Cek apakah created_at ada. Jika tidak, tampilkan strip (-) -->
+                                    <?= !empty($r->created_at) ? date('d M Y H:i', strtotime($r->created_at)) : '-' ?>
                                 </small>
                             </td>
                             <td>
-                                <a href="<?= base_url('stok/riwayat') ?>?produk_id=<?= $r->product_id ?>"
+                                <a href="<?= base_url('stok/riwayat') ?>?produk_id=<?= $r->product_id ?? '' ?>"
                                    class="text-dark">
                                     <strong><?= htmlspecialchars($r->product_name ?? '-') ?></strong>
                                 </a>
                             </td>
                             <td class="text-center">
                                 <!-- type: 'in' = masuk, 'out' = keluar -->
-                                <?php if ($r->type === 'in'): ?>
+                                <?php if (($r->type ?? '') === 'in'): ?>
                                     <span class="badge badge-success">
                                         <i class="fas fa-arrow-up"></i> Masuk
                                     </span>
@@ -317,14 +302,14 @@
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-center font-weight-bold
-                                <?= $r->type === 'in' ? 'text-success' : 'text-danger' ?>">
-                                <?= $r->type === 'in' ? '+' : '−' ?>
-                                <?= number_format($r->quantity) ?>
+                            <td class="text-center font-weight-bold <?= (($r->type ?? '') === 'in') ? 'text-success' : 'text-danger' ?>">
+                                <?= (($r->type ?? '') === 'in') ? '+' : '−' ?>
+                                <?= number_format($r->quantity ?? 0) ?>
                                 <?= htmlspecialchars($r->unit ?? '') ?>
                             </td>
                             <td class="text-center">
-                                <?= number_format($r->stock_after) ?>
+                                <!-- PERBAIKAN: Gunakan null coalescing (?? 0) agar tidak error jika kosong -->
+                                <?= number_format($r->stock_after ?? 0) ?>
                                 <?= htmlspecialchars($r->unit ?? '') ?>
                             </td>
                             <td>
@@ -342,7 +327,7 @@
                             </td>
                         </tr>
                     <?php endif; ?>
-                </tbody>
+                </tbody> 
             </table>
         </div>
     </div>

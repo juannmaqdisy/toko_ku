@@ -4,8 +4,8 @@
  *
  * Model untuk mengelola semua operasi stok
  *
- * @author    SMK Assalafiyyah Sleman
- * @version   1.0
+ * @author     SMK Assalafiyyah Sleman
+ * @version    1.1 (Ditambahkan fungsi stok_keluar)
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -27,14 +27,6 @@ class Stok_model extends CI_Model {
      * @param string $keterangan   Keterangan tambahan
      * @param int $user_id         ID user yang mencatat
      * @return bool                TRUE jika berhasil
-     *
-     * Proses:
-     * 1. Insert ke tabel stock_history dengan type = 'in'
-     * 2. Update stok di tabel products (stock + jumlah)
-     * 3. Update harga beli rata-rata jika harga diinput
-     *
-     * Rumus Harga Beli Rata-rata:
-     * Harga Baru = ((Harga Lama × Stok Lama) + (Harga Baru × Jumlah Masuk)) / (Stok Lama + Jumlah Masuk)
      */
     public function stok_masuk($produk_id, $jumlah, $harga = NULL, $keterangan = '', $user_id = NULL)
     {
@@ -83,21 +75,79 @@ class Stok_model extends CI_Model {
 
         return $this->db->update('products');
     }
+
+    /**
+     * ============================================================
+     * FUNGSI BARU: stok_keluar()
+     * ============================================================
+     * Mencatat stok keluar dan mengurangi stok produk di database
+     *
+     * @param int $produk_id       ID produk
+     * @param int $jumlah          Jumlah stok keluar
+     * @param string $keterangan   Keterangan / Alasan keluar
+     * @param int $user_id         ID user yang mencatat
+     * @return array               Status boolean dan pesan teks
+     */
+    public function stok_keluar($produk_id, $jumlah, $keterangan = '', $user_id = NULL)
+    {
+        // 1. Ambil data produk saat ini untuk pengecekan stok di sisi server
+        $produk = $this->db->get_where('products', ['id' => $produk_id])->row();
+
+        if (!$produk) {
+            return [
+                'status'  => FALSE, 
+                'message' => 'Produk tidak ditemukan!'
+            ];
+        }
+
+        // Pengaman berlapis jika user membobol validasi JavaScript javascript
+        if ($produk->stock < $jumlah) {
+            return [
+                'status'  => FALSE, 
+                'message' => 'Gagal! Stok saat ini (' . $produk->stock . ') tidak mencukupi untuk dikeluarkan sejumlah ' . $jumlah . '.'
+            ];
+        }
+
+        // 2. Jalankan Database Transaction agar aman dan sinkron
+        $this->db->trans_start();
+
+        // Mencatat riwayat pengeluaran ke tabel stock_history (type = 'out')
+        $data_history = array(
+            'product_id' => $produk_id,
+            'type'       => 'out',
+            'quantity'   => $jumlah,
+            'price'      => NULL, // Keluar barang tidak memengaruhi harga beli
+            'notes'      => $keterangan ?: 'Stok keluar manual',
+            'created_by' => $user_id
+        );
+        $this->db->insert('stock_history', $data_history);
+
+        // Mengurangi jumlah stok di tabel products
+        $this->db->set('stock', 'stock - ' . (int)$jumlah, FALSE);
+        $this->db->where('id', $produk_id);
+        $this->db->update('products');
+
+        $this->db->trans_complete();
+
+        // 3. Kembalikan status hasil transaksi ke controller
+        if ($this->db->trans_status() === FALSE) {
+            return [
+                'status'  => FALSE, 
+                'message' => 'Terjadi kesalahan sistem saat memproses pengurangan stok.'
+            ];
+        }
+
+        return [
+            'status'  => TRUE, 
+            'message' => 'Stok berhasil dikurangi sejumlah ' . $jumlah . ' unit.'
+        ];
+    }
+
     /**
      * ============================================================
      * FUNGSI: ambil_riwayat()
      * ============================================================
      * Mengambil riwayat pergerakan stok
-     *
-     * @param int $produk_id    Filter berdasarkan produk (opsional)
-     * @param string $tipe      Filter berdasarkan tipe 'in'/'out' (opsional)
-     * @param int $limit        Batas jumlah data (default: 50)
-     * @return array            Array riwayat stok
-     *
-     * Mengambil data dari:
-     * - stock_history
-     * - products (nama produk)
-     * - users (nama user yang mencatat)
      */
     public function ambil_riwayat($produk_id = NULL, $tipe = NULL, $limit = 50)
     {
@@ -133,14 +183,6 @@ class Stok_model extends CI_Model {
      * ============================================================
      * FUNGSI: ambil_stok_menipis()
      * ============================================================
-     * Mengambil produk dengan stok menipis
-     *
-     * @param int $batas    Batas stok (default: 10)
-     * @return array        Array produk stok menipis
-     *
-     * Digunakan untuk:
-     * - Notifikasi di dashboard
-     * - Laporan stok
      */
     public function ambil_stok_menipis($batas = 10)
     {
@@ -159,9 +201,6 @@ class Stok_model extends CI_Model {
      * ============================================================
      * FUNGSI: ambil_stok_habis()
      * ============================================================
-     * Mengambil produk dengan stok habis (stok = 0)
-     *
-     * @return array    Array produk stok habis
      */
     public function ambil_stok_habis()
     {
@@ -179,12 +218,6 @@ class Stok_model extends CI_Model {
      * ============================================================
      * FUNGSI: laporan_stok()
      * ============================================================
-     * Mengambil data untuk laporan stok
-     *
-     * @param string $tanggal_mulai   Filter tanggal mulai (opsional)
-     * @param string $tanggal_selesai Filter tanggal selesai (opsional)
-     * @param int $produk_id          Filter produk (opsional)
-     * @return array                  Array data laporan
      */
     public function laporan_stok($tanggal_mulai = NULL, $tanggal_selesai = NULL, $produk_id = NULL)
     {
@@ -221,15 +254,6 @@ class Stok_model extends CI_Model {
      * ============================================================
      * FUNGSI: ringkasan_stok()
      * ============================================================
-     * Mengambil ringkasan statistik stok
-     *
-     * @return array    Array statistik stok
-     *                 [
-     *                     'total_produk' => 100,
-     *                     'stok_menipis' => 15,
-     *                     'stok_habis' => 5,
-     *                     'stok_aman' => 80
-     *                 ]
      */
     public function ringkasan_stok()
     {
