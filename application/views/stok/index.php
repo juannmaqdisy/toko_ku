@@ -107,7 +107,7 @@
                             Stok Habis
                         </div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <?= $ringkasan->total_habis ?? 0 ?>
+                            <?= isset($ringkasan['stok_habis']) ? $ringkasan['stok_habis'] : 0; ?>
                         </div>
                         <small class="text-muted">Perlu restock segera</small>
                     </div>

@@ -270,7 +270,7 @@ class Stok_model extends CI_Model {
         $data['stok_habis'] = count($this->ambil_stok_habis());
 
         // Stok aman (> 10)
-        $data['stok_aman'] = $data['total_produk'] - $data['stok_menipis'] - $data['stok_habis'];
+        $data['stok_normal'] = $data['total_produk'] - $data['stok_menipis'] - $data['stok_habis'];
 
         return $data;
     }
