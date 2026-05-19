@@ -103,7 +103,7 @@ $autoload['helper'] = array('url', 'file', 'app', 'date', 'form');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('ion_auth');
+$autoload['config'] = array();
 
 /*
 | -------------------------------------------------------------------
