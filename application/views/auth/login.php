@@ -169,39 +169,14 @@
 
 <script>
 $(document).ready(function() {
-    // Handle form submit dengan AJAX
-    $('#loginForm').on('submit', function(e) {
-        e.preventDefault();
+    // KODE AJAX DI SINI SUDAH DIHAPUS
 
-        // Disable tombol
-        $('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Login...');
-
-        // Submit form
-        $.ajax({
-            url: $(this).attr('action'),
-            method: 'POST',
-            data: $(this).serialize(),
-            success: function(response) {
-                // Check jika redirect
-                if(response.indexOf('window.location') !== -1) {
-                    window.location.href = '<?= base_url('dashboard') ?>';
-                } else {
-                    location.reload();
-                }
-            },
-            error: function() {
-                $('button[type="submit"]').prop('disabled', false).html('Login');
-                location.reload();
-            }
-        });
-    });
-
-    // Show SweetAlert jika ada pesan error
+    // Tampilkan SweetAlert jika ada pesan error dari session flashdata
     <?php if($this->session->flashdata('error')): ?>
     Swal.fire({
         icon: 'error',
         title: 'Login Gagal',
-        text: '<?= $this->session->flashdata('error') ?>',
+        text: '<?= trim(preg_replace('/\s+/', ' ', $this->session->flashdata('error'))) ?>',
         confirmButtonColor: '#667eea'
     });
     <?php endif; ?>
